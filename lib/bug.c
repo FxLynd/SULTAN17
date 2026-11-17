@@ -62,7 +62,7 @@ static inline unsigned long bug_addr(const struct bug_entry *bug)
 #endif
 }
 
-#if defined(CONFIG_MODULES) || defined(CONFIG_INTEGRATE_MODULES)
+#ifdef CONFIG_MODULES
 /* Updates are protected by module mutex */
 static LIST_HEAD(module_bug_list);
 
@@ -236,7 +236,7 @@ static void clear_once_table(struct bug_entry *start, struct bug_entry *end)
 
 void generic_bug_clear_once(void)
 {
-#if defined(CONFIG_MODULES) || defined(CONFIG_INTEGRATE_MODULES)
+#ifdef CONFIG_MODULES
 	struct module *mod;
 
 	rcu_read_lock_sched();
