@@ -35,6 +35,11 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
 			   smp.o smp_spin_table.o topology.o smccc-call.o	\
 			   syscall.o proton-pack.o idreg-override.o idle.o	\
 			   patching.o module.o
+ifeq ($(CONFIG_INTEGRATE_MODULES),y)
+CFLAGS_module.o += -DCONFIG_MODULES=1
+CFLAGS_module-plts.o += -DCONFIG_MODULES=1
+CFLAGS_alternative.o += -DCONFIG_MODULES=1
+endif
 
 targets			+= efi-entry.o
 
