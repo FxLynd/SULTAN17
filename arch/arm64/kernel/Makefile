@@ -38,6 +38,7 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
 ifeq ($(CONFIG_INTEGRATE_MODULES),y)
 CFLAGS_module.o += -DCONFIG_MODULES=1
 CFLAGS_module-plts.o += -DCONFIG_MODULES=1
+CFLAGS_alternative.o += -DCONFIG_MODULES=1
 endif
 
 targets			+= efi-entry.o
