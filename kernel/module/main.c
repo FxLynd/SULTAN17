@@ -2858,9 +2858,8 @@ static int load_integrated_module(const char *modname, const char __user *uargs)
 	snprintf(kmod, sizeof(kmod), "__initdone__kmod_%s__", modname);
 	init_done = (void *)kallsyms_lookup_name(kmod);
 	if (!init_done) {
-		pr_info("%s: module '%s' not found\n", __func__, modname);
-		/* Don't return an error even if the module wasn't found */
-		return 0;
+		/* Not an integrated module; let load_module() load external .ko */
+		return -ENOENT;
 	}
 
 	args = strndup_user(uargs, ~0UL >> 1);
@@ -2953,9 +2952,11 @@ static int load_module(struct load_info *info, const char __user *uargs,
 		goto free_copy;
 
 	if (IS_ENABLED(CONFIG_INTEGRATE_MODULES)) {
-		/* Load the built-in version of this module */
+		/* Load the built-in version if present; fall through for external .ko */
 		err = load_integrated_module(info->name, uargs);
-		goto free_copy;
+		if (err != -ENOENT)
+			goto free_copy;
+		err = 0;
 	}
 
 	/*
