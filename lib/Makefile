@@ -231,6 +231,7 @@ obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
 lib-$(CONFIG_GENERIC_BUG) += bug.o
 ifeq ($(CONFIG_INTEGRATE_MODULES),y)
 CFLAGS_bug.o += -DCONFIG_MODULES=1
+CFLAGS_extable.o += -DCONFIG_MODULES=1
 endif
 
 obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
