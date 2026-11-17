@@ -12,6 +12,7 @@
 #include <linux/module_signature.h>
 #include <linux/trace_events.h>
 #include <linux/init.h>
+#include <linux/timekeeping.h>
 #include <linux/kallsyms.h>
 #include <linux/buildid.h>
 #include <linux/fs.h>
@@ -2858,7 +2859,12 @@ static int load_integrated_module(const char *modname, const char __user *uargs)
 	snprintf(kmod, sizeof(kmod), "__initdone__kmod_%s__", modname);
 	init_done = (void *)kallsyms_lookup_name(kmod);
 	if (!init_done) {
-		/* Not an integrated module; let load_module() load external .ko */
+		/* During early boot (<30s), keep fake-success for stock init modules (e.g. fips140) */
+		if (ktime_get_boottime_seconds() < 30) {
+			pr_info("%s: module '%s' not found (boot grace)\n", __func__, modname);
+			return 0;
+		}
+		/* After boot, allow loading external .ko modules */
 		return -ENOENT;
 	}
 
