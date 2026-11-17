@@ -43,7 +43,7 @@ struct fxl_shm_header {
 	s32 status;
 	u32 batch_count;
 	u64 target_addr;
-} __attribute__((aligned(64)));
+};
 
 struct fxl_kernel_scratch {
 	struct fxl_batch_item items[FXL_SHM_MAX_BATCH];
