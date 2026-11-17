@@ -32,17 +32,18 @@ struct fxl_batch_item {
 struct fxl_shm_header {
 	u64 magic;
 	u64 session_token;
+	u8  reserved_10[0x20];
 	u64 protocol_ver;
 	u32 req_seq;
+	u32 client_pid;
 	u32 ack_seq;
-	u32 cmd;
-	s32 status;
 	u32 ready;
 	s32 target_pid;
-	u32 client_pid;
+	u32 cmd;
+	s32 status;
 	u32 batch_count;
 	u64 target_addr;
-};
+} __attribute__((aligned(64)));
 
 struct fxl_kernel_scratch {
 	struct fxl_batch_item items[FXL_SHM_MAX_BATCH];
